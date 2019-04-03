@@ -1,0 +1,112 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <style>
+        img { padding: 20px !important; }
+        h2 { margin-top: 60px ; }
+    </style>
+    <script>
+        $(document).ready(function() {
+
+        const element = document.querySelector('form');
+        element.addEventListener('submit', event => {
+            event.preventDefault();
+            console.log('Form submission cancelled.');
+        });
+
+        $('#btnSend').click(function() {
+            form = $("#login-form");
+
+            dt = {
+                "Est_HH_Income": parseInt(form["0"][0].value),
+                "calls_total": parseInt(form["0"][1].value),
+                "data_usage_amt": parseInt(form["0"][2].value),
+                "equip_age": parseInt(form["0"][3].value),
+                "rp_pooled_ind": form["0"][4].checked,
+                "lifestage": form["0"][5].value,
+                "sales_channel": form["0"][6].value
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/process',
+                data: JSON.stringify(dt, null, '\t'),
+                contentType: 'application/json;charset=UTF-8',
+                success: function(data) {
+                    Swal.fire(
+                        data,
+                        '',
+                        'success'
+                    )
+                }
+            });
+        });
+
+    });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <img src="https://cdn3.iconfinder.com/data/icons/communication-glyph-white-with-multicolor-backgrou/2048/8_-_Telecom_Tower-512.png" class="img-thumbnail">
+            </div>
+            <div class="col-md-10">
+                <h2>Descubra o melhor plano para você!</h2>
+            </div>
+        </div>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="Est_HH_Income">Valor que deseja pagar por mês</label>
+                <input type="number" id="Est_HH_Income" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="calls_total">Minutos por mês</label>
+                <input type="number" id="calls_total" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="data_usage_amt">Dados por mês</label>
+                <input type="number" id="data_usage_amt" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="equip_age">Idade aparelho (meses)</label>
+                <input type="number" id="equip_age" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="rp_pooled_ind">Deseja compartilhar plano?</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="rp_pooled_ind">
+                    <label class="form-check-label" for="rp_pooled_ind">
+                        Sim
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="lifestage">Tipo de adesão ao plano</label>
+                <select class="form-control" id="lifestage">
+                    <option value="ON-CONTRACT">Com contrato</option>
+                    <option value="EARLY-TENURED">Posse Adiantada</option>
+                    <option value="OFF-CONTRACT">Sem Contrato</option>
+                    <option value="PRE-EXPIRY">Pré Pago</option>
+                    <option value="EXPIRY">Pré Pago com Longa Expiração</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="sales_channel">Tipo de adesão ao plano</label>
+                <select class="form-control" id="sales_channel">
+                    <option value="Retail">Lojas de Varejo</option>
+                    <option value="National Sales">Em Loja</option>
+                    <option value="Indirect">Indireto (Terceiros)</option>
+                </select>
+            </div>
+            <button type="submit" id="btnSend" class="btn btn-primary">Enviar</button>
+        </form>
+    </div>
+</body>
+
+</html>
